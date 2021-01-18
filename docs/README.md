@@ -19,7 +19,7 @@ Thanks  to  the  weakly-supervised  formulation,  the  model  can  be  trained  
 
 
 ### Data Preparation
-We chose to encode each tissue patch with a 1024-dim feature vector using a truncated, pretrained ResNet50. For each WSI, these features are expected to be saved as matrices of torch tensors of size N x 1024, where N is the number of patches from each WSI (varies from slide to slide). The following folder structure is assumed:
+To process the WSI data we used the publicaly available [CLAM WSI-analysis toolbox](https://github.com/mahmoodlab/CLAM). First, the tissue regions in each biopsy slide are segmented. We extract 256x256 patches without spatial overlapping from the segemented regions. Afterward, a pretrained ResNet50 is used to encode each patch into 1024-dim feature vector. Using the CLAM toolbox, the features are saved as matrices of torch tensors of size N x 1024, where N is the number of patches from each WSI (varies from slide to slide). The following folder structure is assumed for the extracted features vectors:    
 ```bash
 DATA_ROOT_DIR/
     └──DATASET_DIR/
@@ -29,18 +29,66 @@ DATA_ROOT_DIR/
 ```
 DATA_ROOT_DIR is the base directory of all datasets (e.g. the directory to your SSD). DATASET_DIR is the name of the folder containing data specific to one experiment and features from each slide is stored as a .pt file inside this folder.
 
-Please refer to refer to [CLAM](https://github.com/mahmoodlab/CLAM) for examples on how perform this feature extraction step.
+Please refer to refer to [CLAM](https://github.com/mahmoodlab/CLAM) for examples on tissue segmentation and featue extraction. 
+
+### Datasets
+The model takes as input list of data in the form of a csv file, containing at least 3 columns: *case_id*, *slide_id* and *label*. Each *case_id* is a unique identifier for a patient, while the *slide_id* is a unique identified for a slide that corresponds to the name of an extracted feature .pt file. In this way multiple slides from a patient can be easily tracked. Moreover, when train/val/test splits are created, the model make sure that slides from the same patient are always present in the same split. The *label* column contains the corresponding label. For the multi-task network, used for the EMB assessment, 3 columns with labels for each task are considered: *label_cell*, *label_arm* and *label_quilty*. We provide dummy examples of the dataset csv file in the *dataset_csv* folder, named _/CardiacDummy_MTL.csv_ (for the multi-task problem) and _CardiacDummy_Grade.csv_ (for the grading network). You are free to input the labels for your data in any way as long as you specify the appropriate dictionary maps under the label_dicts argument of the dataset object's constructor (see below). For demonstration purposes we use _low_ and _high_ for the grade labels. In the multi-task problem, the state of cellular rejection, represented by *label_cell* is encoded as 'no_cell' and 'cell' to express absence or presence of cellular rejection. Similarly, the antibody mediated rejections, specified in *label_amr* are marked as 'no_amr' and 'amr', while quilty lesions (*label_quilty*) are specified as 'no_quilty' and 'quilty'.
+
+Dataset objects used for actual training/validation/testing can be constructed using the *Generic_MIL_MTL_Dataset* Class (for the multi-task problem) and *Generic_MIL_Dataset* (for the grading task), defined in datasets/dataset_mtl.py and datasets/dataset_generic.py. Examples of such dataset objects passed to the models can be found in both *main.py* and *eval.py*: 
+
+```python
+if args.task == 'cardiac-grade':
+    args.n_classes=2
+    dataset = Generic_MIL_Dataset(csv_path = 'dataset_csv/CardiacDummy_Grade.csv',
+                            data_dir= os.path.join(args.data_root_dir, 'features'),
+                            shuffle = False,
+                            seed = args.seed,
+                            print_info = True,
+                            label_dict = {'low':0, 'high':1},
+                            patient_strat=False,
+                            ignore=[])
+
+
+elif args.task == 'cardiac-mtl':
+    args.n_classes=[2,2,2]
+    dataset = Generic_MIL_MTL_Dataset(csv_path = 'dataset_csv/CardiacDummy_MTL.csv',
+                            data_dir= os.path.join(args.data_root_dir, 'features'),
+                            shuffle = False,
+                            seed = args.seed,
+                            print_info = True,
+                            label_dicts = [{'no_cell':0, 'cell':1},
+                                            {'no_amr':0, 'amr':1},
+                                            {'no_quilty':0, 'quilty':1}],
+                            label_cols=['label_cell','label_amr','label_quilty'],
+                            patient_strat=False,
+                            ignore=[])
+
+```
+In addition, the following arguments need to be specified:
+* csv_path (str): Path to the dataset csv file
+* data_dir (str): Path to saved .pt features for the dataset
+* label_dicts (list of dict): List of dictionaries with key, value pairs for converting str labels to int for each label column
+* label_cols (list of str): List of column headings to use as labels and map with label_dicts
+
+Finally, the user should add this specific 'task' specified by this dataset object to be one of the choices in the --task arguments as shown below:
+
+```python
+parser.add_argument('--task', type=str, choices=['cardiac-mtl, cardiac-grade'])
+```
+
 
 
 ### Training Splits
 For evaluating the algorithm's performance, we randomly partitioned our dataset into training, validation and test splits. These splits can be automatically generated using the create_splits.py script:
 ``` shell
-python create_splits.py --cardiac --seed 1 --k 1
+python create_splits.py --task cardiac-mtl --seed 1 --k 1
+python create_splits.py --task cardiac-grade --seed 1 --k 1
 ```
+where k is the number of folds.
 
 ### Training
 ``` shell
-CUDA_VISIBLE_DEVICES=0 python main.py --drop_out --early_stopping --lr 2e-4 --k 1 --exp_code cardiac_output  --task cardiac  --log_data  --data_root_dir DATA_ROOT_DIR
+CUDA_VISIBLE_DEVICES=0 python main.py --drop_out --early_stopping --lr 2e-4 --k 1 --exp_code cardiac_output  --task cardiac-mtl  --log_data  --data_root_dir DATA_ROOT_DIR
 ```
 The GPU id to use can be specified using CUDA_VISIBLE_DEVICES, in the example command, the 1st GPU is used (4 in total). Other arguments such as --drop_out, --early_stopping, --lr, --reg, and --max_epochs can be specified to customize your experiments.
 
