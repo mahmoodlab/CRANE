@@ -120,11 +120,11 @@ where k is the number of folds.
 ### Training
 To following command can be used to train the multi-task model:
 ``` shell
-CUDA_VISIBLE_DEVICES=0 python main.py --drop_out --early_stopping --lr 2e-4 --k 1 --exp_code cardiac_output  --task cardiac-mtl --mtl --log_data  --data_root_dir DATA_ROOT_DIR --model_type attention_mil
+CUDA_VISIBLE_DEVICES=0 python main.py --drop_out --early_stopping --lr 2e-4 --k 1 --exp_code cardiac_output  --task cardiac-mtl --mtl --log_data  --data_root_dir DATA_ROOT_DIR --drop_out
 ```
 while the single, task grading network training can be performed as follows:
 ``` shell
-CUDA_VISIBLE_DEVICES=0 python main.py --drop_out --early_stopping --lr 2e-4 --k 1 --exp_code cardiac_output  --task cardiac-grade --log_data  --data_root_dir DATA_ROOT_DIR --model_type attention_mil
+CUDA_VISIBLE_DEVICES=0 python main.py --drop_out --early_stopping --lr 2e-4 --k 1 --exp_code cardiac_output  --task cardiac-grade --log_data  --data_root_dir DATA_ROOT_DIR --drop_out
 ```
 The GPU id to use can be specified using CUDA_VISIBLE_DEVICES, in the example command, the 1st GPU is used (4 in total). Other arguments such as --drop_out, --early_stopping, --lr, --reg, and --max_epochs can be specified to customize your experiments. 
 For information on each argument, see:
@@ -142,9 +142,11 @@ This should open a browser window and show the logged training/validation statis
 ### Evaluation
 User also has the option of using the evluation script to test the performances of trained models. Examples corresponding to the models trained above are provided below:
 ``` shell
-CUDA_VISIBLE_DEVICES=0 python eval.py --drop_out --k 1 --models_exp_code cardiac_100_s1 - --task cardiac  --results_dir results --data_root_dir DATA_ROOT_DIR
+CUDA_VISIBLE_DEVICES=0 python eval.py --task cardiac-mtl --results_dir results --models_exp_code cardiac-mtl_100_s1 --drop_out --k 1  --data_root_dir DATA_ROOT_DIR --mtl 
+ 
+CUDA_VISIBLE_DEVICES=0 python eval.py --task cardiac-grade --results_dir results --models_exp_code cardiac-grade_100_s1 --drop_out --k 1 --data_root_dir DATA_ROOT_DIR 
 ```
-For information on each commandline argument, see:
+Where DATA_ROOT_DIR is folder with the features extracted from data that should be used for the evaluation. For information on each commandline argument, see:
 ``` shell
 python eval.py -h
 ```
