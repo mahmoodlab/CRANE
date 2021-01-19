@@ -118,11 +118,15 @@ where k is the number of folds.
 
 
 ### Training
+To following command can be used to train the multi-task model:
 ``` shell
-CUDA_VISIBLE_DEVICES=0 python main.py --drop_out --early_stopping --lr 2e-4 --k 1 --exp_code cardiac_output  --task cardiac-mtl  --log_data  --data_root_dir DATA_ROOT_DIR
+CUDA_VISIBLE_DEVICES=0 python main.py --drop_out --early_stopping --lr 2e-4 --k 1 --exp_code cardiac_output  --task cardiac-mtl --mtl --log_data  --data_root_dir DATA_ROOT_DIR --model_type attention_mil
 ```
-The GPU id to use can be specified using CUDA_VISIBLE_DEVICES, in the example command, the 1st GPU is used (4 in total). Other arguments such as --drop_out, --early_stopping, --lr, --reg, and --max_epochs can be specified to customize your experiments.
-
+while the single, task grading network training can be performed as follows:
+``` shell
+CUDA_VISIBLE_DEVICES=0 python main.py --drop_out --early_stopping --lr 2e-4 --k 1 --exp_code cardiac_output  --task cardiac-grade --log_data  --data_root_dir DATA_ROOT_DIR --model_type attention_mil
+```
+The GPU id to use can be specified using CUDA_VISIBLE_DEVICES, in the example command, the 1st GPU is used (4 in total). Other arguments such as --drop_out, --early_stopping, --lr, --reg, and --max_epochs can be specified to customize your experiments. 
 For information on each argument, see:
 ``` shell
 python main.py -h
