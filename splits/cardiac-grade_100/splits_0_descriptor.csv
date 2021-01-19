@@ -1,0 +1,13 @@
+,train,val,test
+cell_only_low,24,3,6
+cell_only_high,24,3,6
+cell_low_quilty,24,3,6
+cell_high_quilty,24,3,6
+amr_only_low,24,3,6
+amr_only_high,24,3,6
+amr_low_quilty,24,3,6
+amr_high_quilty,24,3,6
+cell_amr_low,24,3,6
+cell_amr_high,24,3,6
+cell_amr_quilty_low,24,3,6
+cell_amr_quilty_high,24,3,6

@@ -6,7 +6,7 @@ from datasets.dataset_generic import Generic_WSI_Classification_Dataset, Generic
 import argparse
 
 parser = argparse.ArgumentParser(description='Creating splits for whole slide classification')
-parser.add_argument('--label_frac', type=float, default= -1,
+parser.add_argument('--label_frac', type=float, default= 1,
                     help='fraction of labels (default: [0.25, 0.5, 0.75, 1.0])')
 parser.add_argument('--seed', type=int, default=1,
                     help='random seed (default: 1)')
