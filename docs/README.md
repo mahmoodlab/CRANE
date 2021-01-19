@@ -7,7 +7,7 @@ CRANE  is  a  high-throughput,  interpretable,  multi-task  framework  that  sim
 
 Thanks  to  the  weakly-supervised  formulation,  the  model  can  be  trained  using  the  patient  diagnosis  as  the only label, surpassing the needs and limitations of manually annotated diagnostic regions for each task.  The architecture of the CRANE model is depicted in Figure 2. CRANE takes as input digitized H&E stained WSI, which represents the gold standard in endomyocardial biopsy assessment.
 
-<img src="EMB.png" width="500px" align="center" />
+<img src="EMB.png" width="500px" align="center" />\
 **Figure 1: Endomyocardial biopsy assessment.** 
 *Fragments of endomyocardial tissue biopsied from the right ventricle underwent formalin fixation and paraffin embedding (FFPE). Each paraffin block was cut into slides with three consecutive levels and stained with hematoxylin and eosin(H&E). Each slide was digitized and served as an input for the model. Ground truth diagnoses to include rejection type and severity were distilled from each pathology report.*
 
