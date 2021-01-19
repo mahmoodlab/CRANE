@@ -1,0 +1,16 @@
+slide_id,case_id,label_cell,label_amr,label_quilty
+TEST-SLIDE_1,TEST-PATIENT_1,cell,no amr,no quilty
+TEST-SLIDE_2,TEST-PATIENT_1,cell,no amr,no quilty
+TEST-SLIDE_3,TEST-PATIENT_1,cell,no amr,no quilty
+TEST-SLIDE_4,TEST-PATIENT_2,cell,amr,no quilty
+TEST-SLIDE_5,TEST-PATIENT_2,cell,amr,no quilty
+TEST-SLIDE_6,TEST-PATIENT_2,cell,amr,no quilty
+TEST-SLIDE_7,TEST-PATIENT_3,no cell,no amr,no quilty
+TEST-SLIDE_8,TEST-PATIENT_3,no cell,no amr,no quilty
+TEST-SLIDE_9,TEST-PATIENT_3,no cell,no amr,no quilty
+TEST-SLIDE_10,TEST-PATIENT_4,no cell,no amr,quilty
+TEST-SLIDE_11,TEST-PATIENT_4,no cell,no amr,quilty
+TEST-SLIDE_12,TEST-PATIENT_4,no cell,no amr,quilty
+TEST-SLIDE_13,TEST-PATIENT_5,cell,no amr,no quilty
+TEST-SLIDE_14,TEST-PATIENT_5,cell,no amr,no quilty
+TEST-SLIDE_15,TEST-PATIENT_5,cell,no amr,no quilty

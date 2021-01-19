@@ -33,10 +33,10 @@ parser.add_argument('--models_exp_code', type=str, default=None,
                     help='experiment code to load trained models (directory under results_dir containing model checkpoints')
 parser.add_argument('--splits_dir', type=str, default=None,
                     help='splits directory, if using custom splits other than what matches the task (default: None)')
-parser.add_argument('--model_size', type=str, choices=['small', 'big'], default='small',
-                    help='size of model (default: small)')
-parser.add_argument('--model_type', type=str, choices=['clam', 'mil', 'attention_mil', 'clam_simple','histogram_mil'], default='clam',
-                    help='type of model (default: clam)')
+parser.add_argument('--model_size', type=str, choices=['small', 'big'], default='big',
+                    help='size of model (default: big)')
+parser.add_argument('--model_type', type=str, choices=['clam', 'mil', 'attention_mil', 'clam_simple','histogram_mil'], default='attention_mil',
+                    help='type of model (default: attention_mil)')
 parser.add_argument('--drop_out', action='store_true', default=False,
                     help='whether model uses dropout')
 parser.add_argument('--calc_features', action='store_true', default=False,
@@ -51,27 +51,10 @@ parser.add_argument('--mtl', action='store_true', default=False, help='flag to e
 parser.add_argument('--patient_level', action='store_true', default=False, help='To enable computing scores at the patient-level. I.e. all patients slides are treated as a single bag with a single label')
 parser.add_argument('--split', type=str, choices=['train', 'val', 'test', 'all'], default='test')
 parser.add_argument('--task', type=str,
-choices=['cardiac_normal_rejction',
-'cardiac-amr-grades',
-'cardiac-cell-grades',
-'cardiac-cell-amr-grades',
-'cardiac-stl',
-'cardiac-mtl',
-'cardiac-mtl-heatmap',
-'cardiac_normal_rejction-turkey',
-'cardiac-mtl-turkey',
-'cardiac-cell-grades-turkey',
-'cardiac-cell-amr-grades-heatmap',
-'cardiac-mtl-swiss',
-'cardiac_normal_rejction-swiss',
-'cardiac-cell-grades-swiss',
-'cardiac-amr-grades-swiss',
-'cardiac-cell-amr-grades-swiss'])
+choices=['cardiac-grade','cardiac-mtl'])
 
 args = parser.parse_args()
-
 device=torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
 encoding_size = 1024
 
 args.save_dir = os.path.join('./eval_results', 'EVAL_' + str(args.save_exp_code))
@@ -101,44 +84,10 @@ f.close()
 
 print(settings)
 
-if args.task == 'cardiac_normal_rejction':
+if args.task == 'cardiac-grade':
     args.n_classes=2
-    dataset = Generic_MIL_Dataset(csv_path = 'dataset_csv/CardiacNormalRejection.csv',
-                            data_dir= os.path.join(args.data_root_dir, 'cardiac-features'),
-                            shuffle = False,
-                            print_info = True,
-                            label_dict = {'normal':0, 'rejection':1},
-                            patient_strat= False,
-                            ignore=[],
-			    patient_level = args.patient_level)
-
-elif args.task == 'cardiac_normal_rejction-turkey':
-    args.n_classes=2
-    dataset = Generic_MIL_Dataset(csv_path = 'dataset_csv/CardiacNormalRejection_Turkey.csv',
-                            data_dir= os.path.join(args.data_root_dir, 'cardiac-features'),
-                            shuffle = False,
-                            print_info = True,
-                            label_dict = {'normal':0, 'rejection':1},
-                            patient_strat= False,
-                            ignore=[],
-			    patient_level = args.patient_level)
-
-elif args.task == 'cardiac_normal_rejction-swiss':
-    args.n_classes=2
-    dataset = Generic_MIL_Dataset(csv_path = 'dataset_csv/CardiacNormalRejection_Swiss.csv',
-                            data_dir= os.path.join(args.data_root_dir, 'cardiac-features'),
-                            shuffle = False,
-                            print_info = True,
-                            label_dict = {'normal':0, 'rejection':1},
-                            patient_strat= False,
-                            ignore=[],
-			    patient_level = args.patient_level)
-
-
-elif args.task == 'cardiac-amr-grades':
-    args.n_classes=2
-    dataset = Generic_MIL_Dataset(csv_path = 'dataset_csv/CardiacAmrGradesTraining.csv',
-                            data_dir= os.path.join(args.data_root_dir, 'cardiac-features'),
+    dataset = Generic_MIL_Dataset(csv_path = 'dataset_csv/CardiacDummy_Grade.csv',
+                            data_dir= os.path.join(args.data_root_dir, 'features'),
                             shuffle = False,
                             print_info = True,
                             label_dict = {'low':0, 'high':1},
@@ -146,108 +95,11 @@ elif args.task == 'cardiac-amr-grades':
                             ignore=[],
 			    patient_level = args.patient_level)
 
-
-
-elif args.task == 'cardiac-amr-grades-swiss':
-    args.n_classes=2
-    dataset = Generic_MIL_Dataset(csv_path = 'dataset_csv/CardiacAmrGradesTraining_Swiss.csv',
-                        data_dir= os.path.join(args.data_root_dir, 'cardiac-features'),
-                        shuffle = False,
-                        print_info = True,
-                        label_dict = {'low':0, 'high':1},
-                        patient_strat= False,
-                        ignore=[],
-                        patient_level = args.patient_level)
-
-
-
-elif args.task == 'cardiac-cell-grades':
-    args.n_classes=2
-    dataset = Generic_MIL_Dataset(csv_path = 'dataset_csv/CardiacCellGradesTraining.csv',
-                            data_dir= os.path.join(args.data_root_dir, 'cardiac-features'),
-                            shuffle = False,
-                            print_info = True,
-                            label_dict = {'low':0, 'high':1},
-                            patient_strat= False,
-                            ignore=[],
-			    patient_level = args.patient_level)
-
-elif args.task == 'cardiac-cell-grades-turkey':
-    args.n_classes=2
-    dataset = Generic_MIL_Dataset(csv_path = 'dataset_csv/CardiacCellGrades_Turkey.csv',
-                            data_dir= os.path.join(args.data_root_dir, 'cardiac-features'),
-                            shuffle = False,
-                            print_info = True,
-                            label_dict = {'low':0, 'high':1},
-                            patient_strat= False,
-                            ignore=[],
-			    patient_level = args.patient_level)
-
-
-elif args.task == 'cardiac-cell-grades-swiss':
-    args.n_classes=2
-    dataset = Generic_MIL_Dataset(csv_path = 'dataset_csv/CardiacCellGrades_Swiss.csv',
-                            data_dir= os.path.join(args.data_root_dir, 'cardiac-features'),
-                            shuffle = False,
-                            print_info = True,
-                            label_dict = {'low':0, 'high':1},
-                            patient_strat= False,
-                            ignore=[],
-			    patient_level = args.patient_level)
-
-
-elif args.task == 'cardiac-cell-amr-grades':
-    args.n_classes=2
-    dataset = Generic_MIL_Dataset(csv_path = 'dataset_csv/CardiacCellAmrGradesTraining.csv',
-                            data_dir= os.path.join(args.data_root_dir, 'cardiac-features'),
-                            shuffle = False,
-                            print_info = True,
-                            label_dict = {'low':0, 'high':1},
-                            patient_strat= False,
-                            ignore=[],
-			    patient_level = args.patient_level)    
-
-elif args.task == 'cardiac-cell-amr-grades-swiss':
-    args.n_classes=2
-    dataset = Generic_MIL_Dataset(csv_path = 'dataset_csv/CardiacCellAmrGrades_Swiss.csv',
-                            data_dir= os.path.join(args.data_root_dir, 'cardiac-features'),
-                            shuffle = False,
-                            print_info = True,
-                            label_dict = {'low':0, 'high':1},
-                            patient_strat= False,
-                            ignore=[],
-			    patient_level = args.patient_level)
-
-
-elif args.task == 'cardiac-cell-amr-grades-heatmap':
-    args.n_classes=2
-    dataset = Generic_MIL_Dataset(csv_path = 'dataset_csv/CardiacCellAmrGrades_HM.csv',
-                            data_dir= os.path.join(args.data_root_dir, 'cardiac-features'),
-                            shuffle = False,
-                            print_info = True,
-                            label_dict = {'low':0, 'high':1},
-                            patient_strat= False,
-                            ignore=[],patient_level = args.patient_level)
-
-elif args.task == 'cardiac-stl':
-    args.n_classes=8
-    dataset = Generic_MIL_Dataset(csv_path = 'dataset_csv/CardiacSTLTraining.csv',
-                            data_dir= os.path.join(args.data_root_dir, 'cardiac-features'),
-                            shuffle = False,
-                            print_info = True,
-                            label_dict = {'cell_only':0,'amr_only':1,
-					  'quilty_only':2, 'cell_amr':3, 
-					  'cell_quilty':4, 'amr_quilty':5, 
-					  'cell_amr_quilty':6,'normal':7},
-                            patient_strat= False,
-                            ignore=[],
-			    patient_level = args.patient_level)
 
 elif args.task == 'cardiac-mtl':
     args.n_classes = [2,2,2]
-    dataset = Generic_MIL_MTL_Dataset(csv_path = 'dataset_csv/CardiacMTL.csv',
-    #dataset = Generic_MIL_MTL_Dataset(csv_path = 'dataset_csv/CardiacMTL_val.csv',
-                                    data_dir= os.path.join(args.data_root_dir, 'cardiac-features'),
+    dataset = Generic_MIL_MTL_Dataset(csv_path = 'dataset_csv/CardiacDummy_MTL.csv',
+                                    data_dir= os.path.join(args.data_root_dir, 'features'),
                                     shuffle = False,
                                     print_info = True,
                                      label_dicts = [{'no_cell':0, 'cell':1},
@@ -257,52 +109,6 @@ elif args.task == 'cardiac-mtl':
                                     patient_strat= False,
                                     ignore=[],
 				    patient_level = args.patient_level)
-
-elif args.task == 'cardiac-mtl-heatmap':
-    args.n_classes = [2,2,2]
-    dataset = Generic_MIL_MTL_Dataset(csv_path = 'dataset_csv/CardiacMTL_HM_IHC.csv',
-                                    data_dir= os.path.join(args.data_root_dir, 'cardiac-features'),
-                                    shuffle = False,
-                                    print_info = True,
-                                     label_dicts = [{'no_cell':0, 'cell':1},
-                                                    {'no_amr':0, 'amr':1},
-                                                    {'no_quilty':0, 'quilty':1}],
-                                    label_cols=['label_cell','label_amr','label_quilty'],
-                                    patient_strat= False,
-                                    ignore=[],
-				    patient_level = args.patient_level)
-
-
-elif args.task == 'cardiac-mtl-turkey':
-    args.n_classes = [2,2,2]
-    dataset = Generic_MIL_MTL_Dataset(csv_path = 'dataset_csv/CardiacMTL_Turkey.csv',
-                                    data_dir= os.path.join(args.data_root_dir, 'cardiac-features'),
-                                    shuffle = False,
-                                    print_info = True,
-                                     label_dicts = [{'no_cell':0, 'cell':1},
-                                                    {'no_amr':0, 'amr':1},
-                                                    {'no_quilty':0, 'quilty':1}],
-                                    label_cols=['label_cell','label_amr','label_quilty'],
-                                    patient_strat= False,
-                                    ignore=[],
-				    patient_level = args.patient_level)
-
-
-elif args.task == 'cardiac-mtl-swiss':
-    args.n_classes = [2,2,2]
-    dataset = Generic_MIL_MTL_Dataset(csv_path = 'dataset_csv/CardiacMTL_Swiss.csv',
-                                    data_dir= os.path.join(args.data_root_dir, 'cardiac-features'),
-                                    shuffle = False,
-                                    print_info = True,
-                                     label_dicts = [{'no_cell':0, 'cell':1},
-                                                    {'no_amr':0, 'amr':1},
-                                                    {'no_quilty':0, 'quilty':1}],
-                                    label_cols=['label_cell','label_amr','label_quilty'],
-                                    patient_strat= False,
-                                    ignore=[],
-				    patient_level = args.patient_level)
-
-
 
 
 elif os.path.isdir(args.task):

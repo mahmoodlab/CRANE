@@ -23,10 +23,15 @@ import pandas as pd
 import numpy as np
 
 
-def main(args):
-    print("--------------------------")
-    print("       STL                ")
-    print("--------------------------")
+# Rejection grade:
+# binary classifier:
+# class 0 - low grade
+# class 1 - high grade
+#-------------------------------
+def main_grade(args):
+    print("-----------------------------------------")
+    print(" Grade Net (single task binary classifier")
+    print("-----------------------------------------")
 
     # create results directory if necessary
     if not os.path.isdir(args.results_dir):
@@ -71,12 +76,17 @@ def main(args):
     final_df.to_csv(os.path.join(args.results_dir, save_name))
 
 
-
+# Multi task classifier for EMB evaluation:
+# consist of 3 simultaneous tasks:
+# task1: cellular vs non-cellular
+# task2: antibody vs non-antibody
+# task3: quilty lesion vs no quilty lesion
+#-------------------------------------------
 def main_mtl(args):
 
-    print("--------------------------")
-    print("       MTL                ")
-    print("--------------------------")
+    print("----------------------------------------")
+    print(" EMB assessment - multi task classifier ")
+    print("----------------------------------------")
    
    # create results directory if necessary
     if not os.path.isdir(args.results_dir):
@@ -189,21 +199,12 @@ parser.add_argument('--inst_loss', type=str, choices=['svm', 'ce', None], defaul
                      help='instance-level clustering loss function (default: None)')
 parser.add_argument('--bag_loss', type=str, choices=['svm', 'ce'], default='ce',
                      help='slide-level classification loss function (default: ce)')
-parser.add_argument('--model_type', type=str, choices=['clam', 'mil', 'clam_simple', 'attention_mil', 'histogram_mil'], default='clam_simple', 
-                     help='type of model (default: clam_simple)')
+parser.add_argument('--model_type', type=str, choices=['clam', 'mil', 'clam_simple', 'attention_mil', 'histogram_mil'], default='attention_mil', help='type of model (default: attention_mil)')
 parser.add_argument('--exp_code', type=str, help='experiment code for saving results')
 parser.add_argument('--weighted_sample', action='store_true', default=False, help='enable weighted sampling')
-parser.add_argument('--model_size', type=str, choices=['small', 'big'], default='small', help='size of model')
+parser.add_argument('--model_size', type=str, choices=['small', 'big'], default='big', help='size of model')
 parser.add_argument('--mtl', action='store_true', default=False, help='flag to enable multi-task problem')
-parser.add_argument('--task', type=str,
-choices=['camelyon_40x_cv',
-'cardiac_normal_rejction',
-'cardiac-amr-grades',
-'cardiac-cell-grades',
-'cardiac-cell-amr-grades',
-'cardiac-mtl',
-'cardiac-mtl-noQ',
-'cardiac-stl'])
+parser.add_argument('--task', type=str, choices=['cardiac-grade','cardiac-mtl'])
 
 
 args = parser.parse_args()
@@ -246,83 +247,23 @@ settings = {'num_splits': args.k,
 
 
 print('\nLoad Dataset')
-if args.task == 'camelyon_40x_cv':
+if args.task == 'cardiac-grade':
     args.n_classes=2
-    dataset = Generic_MIL_Dataset(csv_path = 'dataset_csv/camelyon_clean.csv',
-                            data_dir= os.path.join(args.data_root_dir, 'camelyon_feat_resnet'),
-                            shuffle = False,
-                            seed = args.seed,
-                            print_info = True,
-                            label_dict = {'normal_tissue':0, 'tumor_tissue':1},
-                            patient_strat=False,
-                            ignore=[])
-
-elif args.task == 'cardiac_normal_rejction':
-    args.n_classes=2
-    dataset = Generic_MIL_Dataset(csv_path = 'dataset_csv/CardiacNormalRejection.csv',
-                            data_dir= os.path.join(args.data_root_dir, 'cardiac-features'),
-                            shuffle = False,
-                            seed = args.seed,
-                            print_info = True,
-                            label_dict = {'normal':0, 'rejection':1},
-                            patient_strat=False,
-                            ignore=[])
-
-
-elif args.task == 'cardiac-amr-grades':
-    args.n_classes=2
-    dataset = Generic_MIL_Dataset(csv_path = 'dataset_csv/CardiacAmrGradesTraining.csv',
-                            data_dir= os.path.join(args.data_root_dir, 'cardiac-features'),
+    dataset = Generic_MIL_Dataset(csv_path = 'dataset_csv/CardiacDummy_Grade.csv',
+                            data_dir= os.path.join(args.data_root_dir, 'features'),
                             shuffle = False,
                             seed = args.seed,
                             print_info = True,
                             label_dict = {'low':0, 'high':1},
-                            patient_strat=False,
-                            ignore=[])
-
-
-elif args.task == 'cardiac-cell-grades':
-    args.n_classes=2
-    dataset = Generic_MIL_Dataset(csv_path = 'dataset_csv/CardiacCellGradesTraining.csv',
-                            data_dir= os.path.join(args.data_root_dir, 'cardiac-features'),
-                            shuffle = False,
-                            seed = args.seed,
-                            print_info = True,
-                            label_dict = {'low':0, 'high':1},
-                            patient_strat=False,
-                            ignore=[])
-
-
-elif args.task == 'cardiac-cell-amr-grades':
-    args.n_classes=2
-    dataset = Generic_MIL_Dataset(csv_path = 'dataset_csv/CardiacCellAmrGradesTraining.csv',
-                            data_dir= os.path.join(args.data_root_dir, 'cardiac-features'),
-                            shuffle = False,
-                            seed = args.seed,
-                            print_info = True,
-                            label_dict = {'low':0,'high':1},
-                            patient_strat=False,
-                            ignore=[])
-
-elif args.task == 'cardiac-stl':
-    args.n_classes=8
-    dataset = Generic_MIL_Dataset(csv_path = 'dataset_csv/CardiacSTLTraining.csv',
-                            data_dir= os.path.join(args.data_root_dir, 'cardiac-features'),
-                            shuffle = False,
-                            seed = args.seed,
-                            print_info = True,
-			    label_dict = {'cell_only':0,'amr_only':1,
-                                          'quilty_only':2, 'cell_amr':3, 
-                                          'cell_quilty':4, 'amr_quilty':5, 
-                                          'cell_amr_quilty':6,'normal':7},
+                            label_cols=['label_grade'],
                             patient_strat=False,
                             ignore=[])
 
 
 elif args.task == 'cardiac-mtl':
-    args.n_classes=[2,2,2]  # NEED TO CHANGE ACCORDING TO CLASSES IN THE REST OF THE CODE
-    dataset = Generic_MIL_MTL_Dataset(csv_path = 'dataset_csv/CardiacMTL.csv',
-                            data_dir= os.path.join(args.data_root_dir, 'cardiac-features'),
+    args.n_classes=[2,2,2]  
+    dataset = Generic_MIL_MTL_Dataset(csv_path = 'dataset_csv/CardiacDummy_MTL.csv',
+                            data_dir= os.path.join(args.data_root_dir, 'features'),
                             shuffle = False,
                             seed = args.seed,
                             print_info = True,
@@ -333,20 +274,6 @@ elif args.task == 'cardiac-mtl':
                             patient_strat=False,
                             ignore=[])
 
-
-elif args.task == 'cardiac-mtl-noQ':
-    args.n_classes=[2,2,2]   # no quilty data considered here -- but we use the same code as in mtl bc. we are lazy
-    dataset = Generic_MIL_MTL_Dataset(csv_path = 'dataset_csv/CardiacMTLnoQ.csv',
-                            data_dir= os.path.join(args.data_root_dir, 'cardiac-features'),
-                            shuffle = False,
-                            seed = args.seed,
-                            print_info = True,
-                            label_dicts = [{'no_cell':0, 'cell':1},
-                                            {'no_amr':0, 'amr':1},
-					    {'no_quilty':0, 'quilty':1}],
-                            label_cols=['label_cell','label_amr','label_quilty'],
-                            patient_strat=False,
-                            ignore=[])
 
 else:
     raise NotImplementedError
@@ -380,7 +307,7 @@ if __name__ == "__main__":
     if args.mtl:
         results = main_mtl(args)
     else:
-        results = main(args)
+        results = main_grade(args)
 
     print("finished!")
     print("end script")
