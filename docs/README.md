@@ -1,5 +1,7 @@
 ### CRANE: Cardiac Rejection Assessment Neural Estimator CRANE <img src="Logo1.png" width="150px" align="right" />
 CRANE  is  a  high-throughput,  interpretable,  multi-task  framework  that  simultaneously  address the main diagnostic tasks in endomyocardial biopsy screening: acute cellular rejection,antibody-mediated rejection and quilty B lesions, as well as their concurrent appearances (e.g.cellular rejection with quilty lesions). For the detected rejection, the model estimates also the rejection grade.\
+
+
 <img src="EMB.png" width="500px" align="center" />\
 **Figure 1: Endomyocardial biopsy assessment.** *Fragments of endomyocardial tissue biopsied from the right ventricle underwent formalin fixation and paraffin embedding (FFPE).Each paraffin block was cut into slides with three consecutive levels and stained with hematoxylin and eosin(H&E). Each slide was digitized and served as an input for the model. Ground truth diagnoses to include rejection type and severity were distilled from each pathology report.*
 
