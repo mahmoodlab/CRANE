@@ -1,4 +1,4 @@
-### CRANE: Cardiac Rejection Assessment Neural Estimator CRANE <img src="Logo1.png" width="150px" align="right" />
+### CRANE: Cardiac Rejection Assessment Neural Estimator <img src="Logo1.png" width="150px" align="right" />
 
 [Interactive Demo](http://crane.mahmoodlab.org) 
 
