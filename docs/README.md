@@ -2,6 +2,8 @@
 
 [Interactive Demo](http://crane.mahmoodlab.org) 
 
+*This study is currently under a press embargo, please address all questions to fmahmood@fas.harvard.edu*
+
 CRANE  is  a  high-throughput,  interpretable,  multi-task  framework  that  simultaneously  address the main diagnostic tasks in endomyocardial biopsy screening, detection of: acute cellular rejection, antibody-mediated rejection and quilty B lesions, as well as their concurrent appearances (e.g.cellular rejection with quilty lesions). For the detected rejection, the model further estimates the rejection grade.
 
 
