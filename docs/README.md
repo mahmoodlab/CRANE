@@ -1,5 +1,9 @@
 ### CRANE: Cardiac Rejection Assessment Neural Estimator <img src="Logo1.png" width="150px" align="right" />
 
+*International Evaluation of an AI System for Endomyocardial Biopsy Assesment*
+
+
+
 [Interactive Demo](http://crane.mahmoodlab.org) 
 
 *This study is currently under a press embargo, please address all questions to fmahmood@fas.harvard.edu*
