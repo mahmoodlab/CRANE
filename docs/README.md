@@ -2,9 +2,7 @@
 
 *International Evaluation of an AI System for Endomyocardial Biopsy Assesment*
 
-
-
-[Interactive Demo](http://crane.mahmoodlab.org) 
+Read Link | Journal Link | [Interactive Demo](http://crane.mahmoodlab.org) 
 
 *This study is currently under a press embargo, please address all questions to fmahmood@fas.harvard.edu*
 
