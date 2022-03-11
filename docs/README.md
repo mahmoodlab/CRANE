@@ -2,7 +2,7 @@
 
 *Deep learning enabled assesment of cardiac allograft rejection from endomyocardial biopsies*
 
-Read Link | Journal Link | [Interactive Demo](http://crane.mahmoodlab.org) 
+Read Link | Journal Link | [Interactive Demo](http://crane.mahmoodlab.org) | [Cite](#reference) 
 
 *This study is currently under a press embargo, please address all questions to fmahmood@fas.harvard.edu*
 
@@ -172,4 +172,18 @@ python eval.py -h
 ## License
 © [Mahmood Lab](http://www.mahmoodlab.org) - This code is made available under the GPLv3 License and is available for non-commercial academic purposes.
 
+## Reference
+If you find our work useful in your research or if you use parts of this code please consider citing our paper:
+
+Lipkova, J., Chen, T.Y., Lu, M.Y., Shady, M., Williams, M., Wang, J., Mitchell, R.N., Turan, M., Coskun, G., Demir, D. and Nart, D. et al. Deep learning-enabled assessment of cardiac allograft rejection from endomyocardial biopsies. Nature Medicine (2022). https://doi.org/10.1038/s41591-022-01709-2
+
+```
+@article{lu2021data,
+  title={Deep learning-enabled assessment of cardiac allograft rejection from endomyocardial biopsies.},
+  author={Lipkova, Jana and Chen, Tiffany Y and Lu, Ming Y and Shady, Maha and Williams, Mane and Wang, Jingwen and Mitchell, Richard N and Turan, Mehmet and Coskun, Gulfize and Demir, Derya and others},
+  journal={Nature Medicine},
+  year={2022},
+  publisher={Nature Publishing Group}
+}
+```
 
