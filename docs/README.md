@@ -1,10 +1,11 @@
 ### CRANE: Cardiac Rejection Assessment Neural Estimator <img src="Logo1.png" width="150px" align="right" />
 
-*Deep learning enabled assesment of cardiac allograft rejection from endomyocardial biopsies*
+###Deep learning enabled assesment of cardiac allograft rejection from endomyocardial biopsies
+*Nature Medicine*
 
-Read Link | Journal Link | [Interactive Demo](http://crane.mahmoodlab.org) | [Cite](#reference) 
+Read Link | [Journal Link](https://www.nature.com/articles/s41591-022-01709-2) | [Interactive Demo](http://crane.mahmoodlab.org) | [Cite](#reference) 
 
-*This study is currently under a press embargo, please address all questions to fmahmood@fas.harvard.edu*
+*This study is currently under a press embargo until 03/21/22 11am ET, address all questions to fmahmood@fas.harvard.edu*
 
 CRANE  is  a  high-throughput,  interpretable,  multi-task  framework  that  simultaneously  address the main diagnostic tasks in endomyocardial biopsy screening, detection of: acute cellular rejection, antibody-mediated rejection and quilty B lesions, as well as their concurrent appearances (e.g.cellular rejection with quilty lesions). For the detected rejection, the model further estimates the rejection grade.
 
