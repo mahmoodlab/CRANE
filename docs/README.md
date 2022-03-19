@@ -1,6 +1,6 @@
 CRANE <img src="Logo1.png" width="150px" align="right" />
 ===========
-### Deep learning enabled assesment of cardiac allograft rejection from endomyocardial biopsies
+### Deep learning enabled assessment of cardiac allograft rejection from endomyocardial biopsies
 *Nature Medicine*
 
 Read Link | [Journal Link](https://www.nature.com/articles/s41591-022-01709-2) | [Interactive Demo](http://crane.mahmoodlab.org) | [Cite](#reference) 
