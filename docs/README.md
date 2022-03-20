@@ -5,8 +5,6 @@ CRANE <img src="Logo1.png" width="150px" align="right" />
 
 Read Link | [Journal Link](https://www.nature.com/articles/s41591-022-01709-2) | [Interactive Demo](http://crane.mahmoodlab.org) | [Cite](#reference) 
 
-[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fmahmoodlab%2Fclam&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
-
 *This study is currently under a press embargo until 03/21/22 11am ET, address all questions to fmahmood@fas.harvard.edu*
 
 CRANE  is  a  high-throughput,  interpretable,  multi-task  framework  that  simultaneously  address the main diagnostic tasks in endomyocardial biopsy screening, detection of: acute cellular rejection, antibody-mediated rejection and quilty B lesions, as well as their concurrent appearances (e.g.cellular rejection with quilty lesions). For the detected rejection, the model further estimates the rejection grade.
